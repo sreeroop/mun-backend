@@ -26,19 +26,6 @@ const rz_key = {
   key_secret: process.env.RZ_KEY_SECRET.trim()
 }
 
-console.log(process.env.RZ_KEY_ID.trim());
-console.log(process.env.RZ_KEY_SECRET.trim());
-console.log(process.env.TYPE.trim());
-console.log(process.env.PROJECT_ID.trim());
-console.log(process.env.PROJECT_KEY_ID.trim());
-console.log(process.env.PRIVATE_KEY.replace(/\\n/g, '\n').trim());
-console.log(process.env.CLIENT_EMAIL.trim());
-console.log(process.env.CLIENT_ID.trim());
-console.log(process.env.AUTH_URI.trim());
-console.log(process.env.TOKEN_URI.trim());
-console.log(process.env.AUTH_PROVIDER_CERT_URL.trim());
-console.log(process.env.CLIENT_CERT_URL.trim());
-
 
 const instance = new rzp(rz_key);
 router.get('/', (req, res) => {
