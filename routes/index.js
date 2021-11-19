@@ -8,34 +8,36 @@ const dotenv = require('dotenv').config()
 
 admin.initializeApp({
   credential: admin.credential.cert({
-    "type": process.env.TYPE,
-    "project_id": process.env.PROJECT_ID,
-    "private_key_id": process.env.PROJECT_KEY_ID,
-    "private_key": process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-    "client_email": process.env.CLIENT_EMAIL,
-    "client_id": process.env.CLIENT_ID,
-    "auth_uri": process.env.AUTH_URI,
-    "token_uri": process.env.TOKEN_URI,
-    "auth_provider_x509_cert_url": process.env.AUTH_PROVIDER_CERT_URL,
-    "client_x509_cert_url": process.env.CLIENT_CERT_URL
+    "type": process.env.TYPE.trim(),
+    "project_id": process.env.PROJECT_ID.trim(),
+    "private_key_id": process.env.PROJECT_KEY_ID.trim(),
+    "private_key": process.env.PRIVATE_KEY.replace(/\\n/g, '\n').trim(),
+    "client_email": process.env.CLIENT_EMAIL.trim(),
+    "client_id": process.env.CLIENT_ID.trim(),
+    "auth_uri": process.env.AUTH_URI.trim(),
+    "token_uri": process.env.TOKEN_URI.trim(),
+    "auth_provider_x509_cert_url": process.env.AUTH_PROVIDER_CERT_URL.trim(),
+    "client_x509_cert_url": process.env.CLIENT_CERT_URL.trim()
   })
 });
 
 const rz_key = {
-  key_id: process.env.RZ_KEY_ID,
-  key_secret: process.env.RZ_KEY_SECRET
+  key_id: process.env.RZ_KEY_ID.trim(),
+  key_secret: process.env.RZ_KEY_SECRET.trim()
 }
 
-console.log(process.env.RZ_KEY_ID);
-console.log(process.env.RZ_KEY_SECRET);
-console.log(process.env.TYPE);
-console.log(process.env.PRIVATE_KEY);
-console.log(process.env.CLIENT_EMAIL);
-console.log(process.env.CLIENT_ID);
-console.log(process.env.AUTH_URI);
-console.log(process.env.TOKEN_URI);
-console.log(process.env.AUTH_PROVIDER_CERT_URL);
-console.log(process.env.CLIENT_CERT_URL);
+console.log(process.env.RZ_KEY_ID.trim());
+console.log(process.env.RZ_KEY_SECRET.trim());
+console.log(process.env.TYPE.trim());
+console.log(process.env.PROJECT_ID.trim());
+console.log(process.env.PROJECT_KEY_ID.trim());
+console.log(process.env.PRIVATE_KEY.replace(/\\n/g, '\n').trim());
+console.log(process.env.CLIENT_EMAIL.trim());
+console.log(process.env.CLIENT_ID.trim());
+console.log(process.env.AUTH_URI.trim());
+console.log(process.env.TOKEN_URI.trim());
+console.log(process.env.AUTH_PROVIDER_CERT_URL.trim());
+console.log(process.env.CLIENT_CERT_URL.trim());
 
 
 const instance = new rzp(rz_key);
