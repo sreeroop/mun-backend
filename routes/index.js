@@ -32,16 +32,17 @@ router.get('/', (req, res) => {
   res.send("hi")
 })
 router.post("/create_order", async (req, res) => {
+  console.log(req.body);
   var amount = req.body.amount;
   var order_data = req.body.order_data;
   var user_id = req.body.user_id;
   var user_name = req.body.user_name;
   var phone = req.body.phone;
   var email = req.body.email;
-
+  console.log("hi", order_data);
   if (amount && parseInt(amount)) {
     const options = {
-      amount: amount * 100,
+      amount: amount,
       currency: "INR",
       receipt: "USER ID: " + user_id,
     };
@@ -114,13 +115,30 @@ async function get_order(order_id) {
 
   return data;
 }
+async function get_user(uuid) {
+  var data = null;
+  await admin
+    .firestore()
+    .collection("users")
+    .doc(uuid)
+    .get()
+    .then((resp) => {
+      data = resp.data();
+      return data;
+    })
+    .catch((e) => console.log(e));
+
+  return data;
+}
 
 router.post("/verify_order", async (req, res) => {
   var signature = req.body.razorpay_signature;
   var razorpay_res_order_id = req.body.razorpay_order_id;
   var payment_id = req.body.razorpay_payment_id;
+  var event_name = req.body.event;
+  var uuid = req.body.uuid;
   var data = await get_order(razorpay_res_order_id);
-
+  var user = await get_user(uuid)
   if (data) {
     if (
       signature ===
@@ -134,6 +152,34 @@ router.post("/verify_order", async (req, res) => {
         .collection("orders")
         .doc(razorpay_res_order_id)
         .update({ payment_id: payment_id, completed: true });
+
+      if (event_name == "MUN with Training Program") {
+        await admin
+          .firestore()
+          .collection("users")
+          .doc(uuid)
+          .update({ isPayment: true, isMUN: true });
+
+        await admin.firestore().collection("MUN").doc(uuid).set({
+          name: user.name,
+          email: user.email,
+          phone: user.phone
+
+        });
+      } else if (event_name == "Training Program") {
+        await admin
+          .firestore()
+          .collection("users")
+          .doc(uuid)
+          .update({ isPayment: true, isTraining: true });
+
+        await admin.firestore().collection("Training").doc(uuid).set({
+          name: user.name,
+          email: user.email,
+          phone: user.phone
+        });
+      }
+
       res.json({ code: 200, msg: "payment success" });
     } else {
       res.json({
@@ -144,6 +190,33 @@ router.post("/verify_order", async (req, res) => {
   } else {
     res.json({
       msg: "Capturing failed - order_id not found",
+      code: 404,
+    });
+  }
+});
+
+
+
+router.post("/free_reg", async (req, res) => {
+  var uuid = req.body.uuid;
+  var user = await get_user(uuid)
+  if (user) {
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(uuid)
+      .update({ isPayment: true, isFreeTraining: true });
+
+    await admin.firestore().collection("FreeTraining").doc(uuid).set({
+      name: user.name,
+      email: user.email,
+      phone: user.phone
+
+    });
+    res.json({ code: 200, msg: "payment success" });
+  } else {
+    res.json({
+      msg: "No user found",
       code: 404,
     });
   }
