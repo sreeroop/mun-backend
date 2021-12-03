@@ -74,7 +74,7 @@ router.post("/create_order", async (req, res) => {
         completed: false,
         email: email,
         phone: phone,
-        time: new Date(),
+        time: new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }),
       });
       res.json({
         code: 200,
@@ -151,7 +151,7 @@ router.post("/verify_order", async (req, res) => {
         .firestore()
         .collection("orders")
         .doc(razorpay_res_order_id)
-        .update({ payment_id: payment_id, completed: true });
+        .update({ payment_id: payment_id, completed: true, paymentTime: new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }) });
 
       if (event_name == "MUN with Training Program") {
         await admin
