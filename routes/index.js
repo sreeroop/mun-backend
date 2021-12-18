@@ -32,14 +32,12 @@ router.get('/', (req, res) => {
   res.send("hi")
 })
 router.post("/create_order", async (req, res) => {
-  console.log(req.body);
   var amount = req.body.amount;
   var order_data = req.body.order_data;
   var user_id = req.body.user_id;
   var user_name = req.body.user_name;
   var phone = req.body.phone;
   var email = req.body.email;
-  console.log("hi", order_data);
   if (amount && parseInt(amount)) {
     const options = {
       amount: amount,
