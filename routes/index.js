@@ -156,7 +156,7 @@ router.post("/verify_order", async (req, res) => {
           .firestore()
           .collection("users")
           .doc(uuid)
-          .update({ isPayment: true, isMUN: true });
+          .update({ isPayment: true });
 
         await admin.firestore().collection("MUN").doc(uuid).set({
           name: user.name,
@@ -169,7 +169,7 @@ router.post("/verify_order", async (req, res) => {
           .firestore()
           .collection("users")
           .doc(uuid)
-          .update({ isPayment: true, isTraining: true });
+          .update({ isPayment: true });
 
         await admin.firestore().collection("Training").doc(uuid).set({
           name: user.name,
@@ -188,33 +188,6 @@ router.post("/verify_order", async (req, res) => {
   } else {
     res.json({
       msg: "Capturing failed - order_id not found",
-      code: 404,
-    });
-  }
-});
-
-
-
-router.post("/free_reg", async (req, res) => {
-  var uuid = req.body.uuid;
-  var user = await get_user(uuid)
-  if (user) {
-    await admin
-      .firestore()
-      .collection("users")
-      .doc(uuid)
-      .update({ isPayment: true, isFreeTraining: true });
-
-    await admin.firestore().collection("FreeTraining").doc(uuid).set({
-      name: user.name,
-      email: user.email,
-      phone: user.phone
-
-    });
-    res.json({ code: 200, msg: "payment success" });
-  } else {
-    res.json({
-      msg: "No user found",
       code: 404,
     });
   }
