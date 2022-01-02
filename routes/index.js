@@ -5,7 +5,7 @@ const crypto = require('crypto')
 const bp = require('body-parser')
 const admin = require('firebase-admin')
 const dotenv = require('dotenv').config()
-
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 admin.initializeApp({
   credential: admin.credential.cert({
     "type": process.env.TYPE.trim(),
@@ -163,7 +163,9 @@ router.post("/verify_order", async (req, res) => {
           name: user.name,
           email: user.email,
           phone: user.phone
-
+        });
+        await admin.firestore().collection("stats").doc("reg").update({
+          mun: FieldValue.increment(1)
         });
       } else if (event_name == "Training Program") {
         await admin
@@ -176,6 +178,9 @@ router.post("/verify_order", async (req, res) => {
           name: user.name,
           email: user.email,
           phone: user.phone
+        });
+        await admin.firestore().collection("stats").doc("reg").update({
+          training: FieldValue.increment(1)
         });
       }
 
@@ -210,7 +215,9 @@ router.post("/free_reg", async (req, res) => {
       name: user.name,
       email: user.email,
       phone: user.phone
-
+    });
+    await admin.firestore().collection("stats").doc("reg").update({
+      free: FieldValue.increment(1)
     });
     res.json({ code: 200, msg: "payment success" });
   } else {
