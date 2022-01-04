@@ -6,7 +6,7 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 app.use(cors({
-	origin: ["https://nitcmun.ipfnitc.com"],
+  origin: ["https://nitcmun.ipfnitc.com", "http://localhost:3000"],
   optionsSuccessStatus: 200
 }))
 // view engine setup
