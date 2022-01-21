@@ -6,6 +6,7 @@ const bp = require('body-parser')
 const admin = require('firebase-admin')
 const dotenv = require('dotenv').config()
 const FieldValue = require('firebase-admin').firestore.FieldValue;
+const sendMail = require('../helpers/sendMail');
 admin.initializeApp({
   credential: admin.credential.cert({
     "type": process.env.TYPE.trim(),
@@ -146,6 +147,8 @@ router.post("/verify_order", async (req, res) => {
         .update(razorpay_res_order_id + "|" + payment_id)
         .digest("hex")
     ) {
+
+
       await admin
         .firestore()
         .collection("orders")
@@ -167,6 +170,8 @@ router.post("/verify_order", async (req, res) => {
         await admin.firestore().collection("stats").doc("reg").update({
           mun: FieldValue.increment(1)
         });
+        sendMail(user.email, razorpay_res_order_id)
+
       } else if (event_name == "Training Program") {
         await admin
           .firestore()
