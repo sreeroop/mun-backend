@@ -232,5 +232,33 @@ router.post("/free_reg", async (req, res) => {
     });
   }
 });
+router.post("/free_mun", async (req, res) => {
+  var uuid = req.body.uuid;
+  var user = await get_user(uuid)
+  if (user) {
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(uuid)
+      .update({ isPayment: true, isMUN: true });
+
+    await admin.firestore().collection("MUN").doc(uuid).set({
+      name: user.name,
+      email: user.email,
+      phone: user.phone
+    });
+    await admin.firestore().collection("stats").doc("reg").update({
+      mun: FieldValue.increment(1)
+    });
+    sendMail(user.email, "NA")
+    res.json({ code: 200, msg: "success" });
+
+  } else {
+    res.json({
+      msg: "No user found",
+      code: 404,
+    });
+  }
+});
 
 module.exports = router;
