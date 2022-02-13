@@ -5,3 +5,5 @@
 .env.test.local
 .env.production.local
 .env
+/helpers/data
+/helpers/outputs
